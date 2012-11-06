@@ -3594,6 +3594,45 @@ function Ace2Inner(){
           evt:evt
         });
         specialHandled = (specialHandledInHook&&specialHandledInHook.length>0)?specialHandledInHook[0]:specialHandled;
+
+          // (handler: {n: Int, code: Thunk Unit}) -> Unit
+          function runHandler(handler) {
+              if (handler) {
+                  fastIncorp(handler.n);
+                  evt.preventDefault();
+                  handler.code();
+                  specialHandled = true;
+              }
+          }
+
+        if (!specialHandled && isTypeForSpecialKey) {
+            var handlers =
+            {
+                // "delete" key; in mozilla, if we're at the beginning of a line, normalize now,
+                // or else deleting a blank line can take two delete presses.
+                // --
+                // we do deletes completely customly now:
+                //  - allows consistent (and better) meta-delete behavior
+                //  - normalizing and then allowing default behavior confused IE
+                //  - probably eliminates a few minor quirks
+                8: {n: 3, code: function () { doDeleteKey(evt); }}
+                // return key, handle specially;
+                // note that in mozilla we need to do an incorporation for proper return behavior anyway.
+                , 13: {n: 4, code: function () {
+                    doReturnKey();
+                    //scrollSelectionIntoView();
+                    scheduler.setTimeout(function() { outerWin.scrollBy(-100, 0); }, 0);
+                }}
+                // overrides C-Tab, which cycles through tabs in Firefox/Chrome
+                , 9: {n: 5, code: function () { doTabKey(evt.shiftKey);
+                                                //scrollSelectionIntoView();
+                                              }}};
+            var handler = handlers[keyCode];
+            runHandler(handler);
+        }
+
+/*
+        // NB the following 3 cases have: ((!specialHandled) && isTypeForSpecialKey)
         if ((!specialHandled) && isTypeForSpecialKey && keyCode == 8)
         {
           // "delete" key; in mozilla, if we're at the beginning of a line, normalize now,
@@ -3622,6 +3661,7 @@ function Ace2Inner(){
           }, 0);
           specialHandled = true;
         }
+        // XXX nonuniformity: checks Meta/Ctrl
         if ((!specialHandled) && isTypeForSpecialKey && keyCode == 9 && !(evt.metaKey || evt.ctrlKey))
         {
           // tab
@@ -3631,6 +3671,24 @@ function Ace2Inner(){
           //scrollSelectionIntoView();
           specialHandled = true;
         }
+        */
+
+          if ((!specialHandled) && isTypeForCmdKey && (evt.metaKey || evt.ctrlKey)) {
+              var handlers = 
+                  {/*cmd-Z (undo)*/             "z": {n: 6, code: function () { doUndoRedo(evt.shiftKey ? "redo" : "undo"); }}
+                   /*cmd-Y (redo)*/           , "y": {n: 10, code: function () { doUndoRedo("redo"); }}
+                   /*cmd-B (bold)*/           , "b": {n: 13, code: function () { toggleAttributeOnSelection('bold'); }}
+                   /*cmd-I (italic)*/         , "i": {n: 14, code: function () { toggleAttributeOnSelection('italic'); }}
+                   /*cmd-U (underline)*/      , "u": {n: 15, code: function () { toggleAttributeOnSelection('underline'); }}
+                   /*cmd-S (strikethrough)*/  , "s": {n: 2012, code: function () { toggleAttributeOnSelection('strikethrough'); }}
+                   /*cmd-H (backspace)*/      , "h": {n: 20, code: function () { doDeleteKey(); }}};
+              var handler = handlers[String.fromCharCode(which).toLowerCase()];
+              runHandler(handler);
+          }
+
+/*
+        // NB the following 7 cases have (roughly): ((!specialHandled) && isTypeForCmdKey && (evt.metaKey || evt.ctrlKey))
+        // XXX nonuniformity, this case checks (!evt.altKey)
         if ((!specialHandled) && isTypeForCmdKey && String.fromCharCode(which).toLowerCase() == "z" && (evt.metaKey || evt.ctrlKey) && !evt.altKey)
         {
           // cmd-Z (undo)
@@ -3678,6 +3736,15 @@ function Ace2Inner(){
           toggleAttributeOnSelection('underline');
           specialHandled = true;
         }
+        if ((!specialHandled) && isTypeForCmdKey && String.fromCharCode(which).toLowerCase() == "s" && (evt.metaKey || evt.ctrlKey))
+        {
+          // cmd-S (strikethrough)
+          fastIncorp(2012);
+          evt.preventDefault();
+          toggleAttributeOnSelection('strikethrough');
+          specialHandled = true;
+        }
+        // XXX nonuniformity: this case doesn't check (evt.metaKey)
         if ((!specialHandled) && isTypeForCmdKey && String.fromCharCode(which).toLowerCase() == "h" && (evt.ctrlKey))
         {
           // cmd-H (backspace)
@@ -3686,6 +3753,7 @@ function Ace2Inner(){
           doDeleteKey();
           specialHandled = true;
         }
+*/
 
         if (mozillaFakeArrows && mozillaFakeArrows.handleKeyEvent(evt))
         {
