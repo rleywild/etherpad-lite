@@ -1,0 +1,35 @@
+# EPL with HTTPS
+# https://github.com/ether/etherpad-lite/wiki/Providing-encrypted-web-access-to-Etherpad-Lite-using-SSL-certificates-%28HTTPS:--%29
+
+#keys
+SEC_KEY=epl-server.sec.key
+INSEC_KEY=epl-server.insec.key
+CSR=epl-server.csr
+CRT=epl-server.crt
+#own CA
+CA_KEY=own-ca.key
+CA_CRT=own-ca.crt
+ca:
+# Generate the server key
+	openssl genrsa -des3 -out $(SEC_KEY) 4096
+# Remark: the default parameters for certificates (CN, O, OU ..) are retrieved from
+# /etc/ssl/openssl.conf 
+	openssl req -new -key $(SEC_KEY) -out $(CSR)
+	openssl x509 -req -days 9000 -in $(CSR) -signkey $(SEC_KEY) -out $(CRT)
+# Let's make a version of the server key which does not require a password when the server starts
+	openssl rsa -in $(SEC_KEY) -out $(INSEC_KEY)
+
+# Generate a second (temporary) key as the key of your own CA
+	openssl genrsa -des3 -out $(CA_KEY) 4096
+# When being asked for the Common Name CN, enter your our Common Name and add " (CA)" to it.
+# Rationale: CN of your server key must be somehow distinct from the CN of your own-CA certificate.
+	openssl req -new -x509 -days 9000 -key $(CA_KEY) -out $(CA_CRT)
+# Sign your $(SEC_KEY) with the certificate of your own CA resulting in a self-signed $(SEC_KEY)
+	openssl x509 -req -days 9000 -in $(CSR) -CA $(CA_CRT) -CAkey $(CA_KEY) -set_serial 001 -out $(CRT)
+
+	chmod 400 $(SEC_KEY) $(INSEC_KEY) $(CRT)
+# chown etherpad $(SEC_KEY) $(INSEC_KEY) $(CRT)
+
+#Firefox may barf on self-signed key with: "Peer's certificate has an invalid signature. (Error code: sec_error_bad_signature)"
+#If so, manually add the CRT key as follows:
+#Firefox>Edit>Preferences>Advanced>Encryption>View Certificates>Servers>Import>$(CRT)
