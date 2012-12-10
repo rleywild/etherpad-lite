@@ -22,8 +22,8 @@
   // so that the Etherpad server can access them
 
   "ssl" : {
-            "key"  : "keys/epl-server.insec.key",
-            "cert" : "keys/epl-server.crt"
+            "key"  : "extra/keys/epl-server.insec.key",
+            "cert" : "extra/keys/epl-server.crt"
           },
 
   //The Type of the database. You can choose between dirty, postgres, sqlite and mysql
