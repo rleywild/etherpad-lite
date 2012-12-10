@@ -1,0 +1,34 @@
+# https://github.com/ether/etherpad-lite/wiki/How-to-deploy-Etherpad-Lite-as-a-service
+USER=etherpad-lite
+EPL_DIR=/home/$(USER)/epl-live
+SERVICE=epl-live
+# sysvinit file
+SCRIPT_SRC=sysvinit.sh
+SCRIPT_DIR=/etc/init.d
+SCRIPT_FILE=epl-$(SCRIPT_SRC)
+# log file
+LOG_DIR=/var/log/$(SERVICE)
+LOG_FILE=$(SERVICE).log
+
+all:
+
+sysvinit:
+	sudo adduser $(USER)
+# log dir
+	mkdir $(LOG_DIR)
+	chown $(USER) $(LOG_DIR)
+	chgrp $(USER) $(LOG_DIR)
+# sysvinit file
+	cat $(SCRIPT_SRC) | sed \
+	-e 's|\(LOGFILE=\)|\1"$(LOG_DIR)/$(LOG_FILE)"|' \
+	-e 's|\(EPLITE_DIR=\)|\1"$(EPL_DIR)"|' \
+	-e 's|\(USER=\)|\1"$(USER)"|' \
+	-e 's|\(GROUP=\)|\1"$(USER)"|' \
+	-e 's|\(NAME=\)|\1"$(SERVICE)"|' \
+	> $(SCRIPT_DIR)/$(SCRIPT_FILE)
+	chmod +x $(SCRIPT_DIR)/$(SCRIPT_FILE)
+# start
+	update-rc.d $(SCRIPT_FILE) defaults
+
+upstart:
+# TODO: tweak upstart.sh to be sed-ed
