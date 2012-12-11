@@ -1,6 +1,6 @@
 EPUSER=etherpad
 SERVICE=epl-live
-EPL_DIR=/home/$(USER)/$(SERVICE)
+EPL_DIR=/home/$(EPUSER)/$(SERVICE)
 # sysvinit file
 SCRIPT_SRC=sysvinit.sh
 SCRIPT_DIR=/etc/init.d
