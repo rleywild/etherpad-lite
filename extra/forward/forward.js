@@ -6,6 +6,6 @@ var express = require("express");
 var app = express();
 
 app.get('*',function(req,res){  
-    res.redirect("https://" + params.server + ":" + params.https_port + req.url)
+    res.redirect("https://" + params.hostname + ":" + params.https_port + req.url)
 })
 app.listen(params.http_port);

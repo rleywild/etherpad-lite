@@ -1,5 +1,6 @@
 NODE_PKGS=express
 install:
+	chmod +x forward.sh
 	npm install $(NODE_PKGS)
 
 USER=etherpad
