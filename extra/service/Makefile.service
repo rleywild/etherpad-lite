@@ -1,5 +1,5 @@
 # https://github.com/ether/etherpad-lite/wiki/How-to-deploy-Etherpad-Lite-as-a-service
-USER=etherpad-lite
+USER=etherpad
 SERVICE=epl-live
 EPL_DIR=/home/$(USER)/$(SERVICE)
 # sysvinit file
