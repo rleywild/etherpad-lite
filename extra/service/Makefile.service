@@ -2,9 +2,9 @@ EPUSER=etherpad
 SERVICE=epl-live
 EPL_DIR=/home/$(EPUSER)/$(SERVICE)
 # sysvinit file
-SCRIPT_SRC=sysvinit.sh
-SCRIPT_DIR=/etc/init.d
-SCRIPT_FILE=epl-$(SCRIPT_SRC)
+SYSV_SRC=sysvinit.sh
+SYSV_DIR=/etc/init.d
+SYSV_FILE=epl-$(SYSV_SRC)
 # log file
 LOG_DIR=/var/log/$(SERVICE)
 LOG_FILE=$(SERVICE).log
@@ -46,18 +46,18 @@ sysvinit:
 	chown $(EPUSER) $(LOG_DIR)
 	chgrp $(EPUSER) $(LOG_DIR)
 # sysvinit file
-	cat $(SCRIPT_SRC) | sed \
+	cat $(SYSV_SRC) | sed \
 	-e 's|\(LOGFILE=\)|\1"$(LOG_DIR)/$(LOG_FILE)"|' \
 	-e 's|\(EPLITE_DIR=\)|\1"$(EPL_DIR)"|' \
 	-e 's|\(USER=\)|\1"$(EPUSER)"|' \
 	-e 's|\(GROUP=\)|\1"$(EPUSER)"|' \
 	-e 's|\(NAME=\)|\1"$(SERVICE)"|' \
-	> $(SCRIPT_DIR)/$(SCRIPT_FILE)
-	chmod +x $(SCRIPT_DIR)/$(SCRIPT_FILE)
+	> $(SYSV_DIR)/$(SYSV_FILE)
+	chmod +x $(SYSV_DIR)/$(SYSV_FILE)
 # start
 # http://manpages.ubuntu.com/manpages/hardy/man8/update-rc.d.8.html
-	update-rc.d $(SCRIPT_FILE) defaults
-#	sh $(SCRIPT_FILE) start
+	update-rc.d $(SYSV_FILE) defaults
+	sh $(SYSV_DIR)/$(SYSV_FILE) start
 
 upstart:
 # TODO: tweak upstart.sh to be sed-ed

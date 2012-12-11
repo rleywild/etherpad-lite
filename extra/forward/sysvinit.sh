@@ -1,23 +1,21 @@
-#!/bin/sh
-# based on https://github.com/ether/etherpad-lite/wiki/How-to-deploy-Etherpad-Lite-as-a-service
-
+#! /bin/sh
 ### BEGIN INIT INFO
-# Provides:          etherpad-lite
+# Provides:          forward
 # Required-Start:    $local_fs $remote_fs $network $syslog
 # Required-Stop:     $local_fs $remote_fs $network $syslog
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
-# Short-Description: starts etherpad lite
-# Description:       starts etherpad lite using start-stop-daemon
+# Short-Description: Forward HTTP to HTTPS
+# Description:       Forward HTTP to HTTPS
 ### END INIT INFO
 
-PATH="/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/opt/node/bin"
+PATH=/sbin:/usr/sbin:/bin:/usr/bin
 LOGFILE=
-EPLITE_DIR=
-EPLITE_BIN="bin/safeRun.sh"
+SVC_DIR=
+SVC_BIN="forward.sh"
 USER=
 GROUP=
-DESC="Etherpad Lite"
+DESC="HTTP to HTTPS forward"
 NAME=
 PIDFILE=/var/run/$NAME.pid
 
@@ -25,10 +23,11 @@ set -e
 
 . /lib/lsb/init-functions
 
-start() {
+start()
+{
   echo "Starting $DESC... "
   
-  start-stop-daemon --start --chuid "$USER:$GROUP" --background --make-pidfile --pidfile $PIDFILE --exec $EPLITE_DIR/$EPLITE_BIN -- $LOGFILE || true
+  start-stop-daemon --start --chuid "$USER:$GROUP" --background --make-pidfile --pidfile $PIDFILE --exec $SVC_DIR/$SVC_BIN -- $LOGFILE || true
   echo "done"
 }
 
@@ -53,7 +52,7 @@ stop() {
 }
 
 status() {
-  status_of_proc -p $PIDFILE "" "$DESC" && exit 0 || exit $?
+  status_of_proc -p $PIDFILE "" "forward" && exit 0 || exit $?
 }
 
 case "$1" in
@@ -77,3 +76,4 @@ case "$1" in
 esac
 
 exit 0
+
