@@ -36,15 +36,17 @@ mysql:
 	USE `$(DBNAME)`;
 	ALTER TABLE `store` CONVERT TO CHARACTER SET utf8 COLLATE utf8_bin;
 
+SUDO=sudo
 # https://github.com/ether/etherpad-lite/wiki/How-to-deploy-Etherpad-Lite-as-a-service
+# must run as root:
 sysvinit:
 #	sudo adduser $(EPUSER)
 # log dir
-	$(SUDO) mkdir $(LOG_DIR)
-	$(SUDO) chown $(EPUSER) $(LOG_DIR)
-	$(SUDO) chgrp $(EPUSER) $(LOG_DIR)
+	mkdir $(LOG_DIR)
+	chown $(EPUSER) $(LOG_DIR)
+	chgrp $(EPUSER) $(LOG_DIR)
 # sysvinit file
-	$(SUDO) cat $(SCRIPT_SRC) | sed \
+	cat $(SCRIPT_SRC) | sed \
 	-e 's|\(LOGFILE=\)|\1"$(LOG_DIR)/$(LOG_FILE)"|' \
 	-e 's|\(EPLITE_DIR=\)|\1"$(EPL_DIR)"|' \
 	-e 's|\(USER=\)|\1"$(EPUSER)"|' \
@@ -54,7 +56,7 @@ sysvinit:
 	chmod +x $(SCRIPT_DIR)/$(SCRIPT_FILE)
 # start
 # http://manpages.ubuntu.com/manpages/hardy/man8/update-rc.d.8.html
-	$(SUDO) update-rc.d $(SCRIPT_FILE) defaults
+	update-rc.d $(SCRIPT_FILE) defaults
 #	sh $(SCRIPT_FILE) start
 
 upstart:
