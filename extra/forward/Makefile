@@ -3,7 +3,7 @@ install:
 	npm install $(NODE_PKGS)
 
 USER=etherpad
-SERVICE=forward
+SERVICE=epl-fwd
 FWD_DIR=/home/$(USER)/epl-live/extra/forward
 # sysvinit file
 SYSV_SRC=sysvinit.sh
