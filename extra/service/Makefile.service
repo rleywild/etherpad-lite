@@ -1,7 +1,7 @@
 # https://github.com/ether/etherpad-lite/wiki/How-to-deploy-Etherpad-Lite-as-a-service
 USER=etherpad-lite
-EPL_DIR=/home/$(USER)/epl-live
 SERVICE=epl-live
+EPL_DIR=/home/$(USER)/$(SERVICE)
 # sysvinit file
 SCRIPT_SRC=sysvinit.sh
 SCRIPT_DIR=/etc/init.d
@@ -15,9 +15,9 @@ all:
 sysvinit:
 	sudo adduser $(USER)
 # log dir
-	mkdir $(LOG_DIR)
-	chown $(USER) $(LOG_DIR)
-	chgrp $(USER) $(LOG_DIR)
+	sudo mkdir $(LOG_DIR)
+	sudo chown $(USER) $(LOG_DIR)
+	sudo chgrp $(USER) $(LOG_DIR)
 # sysvinit file
 	cat $(SCRIPT_SRC) | sed \
 	-e 's|\(LOGFILE=\)|\1"$(LOG_DIR)/$(LOG_FILE)"|' \
