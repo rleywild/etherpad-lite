@@ -4,7 +4,7 @@ install:
 
 USER=etherpad
 SERVICE=forward
-FWD_DIR=/home/$(EPUSER)/epl-live/extra/forward
+FWD_DIR=/home/$(USER)/epl-live/extra/forward
 # sysvinit file
 SYSV_SRC=sysvinit.sh
 SYSV_DIR=/etc/init.d
