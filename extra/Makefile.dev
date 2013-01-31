@@ -1,0 +1,5 @@
+# http://bradlyfeeley.com/2008/09/03/update-a-github-fork-from-the-original-repo/
+pull:
+	git remote add --track develop ether-dev git://github.com/ether/etherpad-lite.git
+	git fetch ether-dev
+	git merge ether-dev/develop
