@@ -34,7 +34,7 @@
   "pad.settings.fontType.normal": "Normal",
   "pad.settings.fontType.monospaced": "Monospace",
 
-"pad.settings.strikeType": "Hidden type:",
+"pad.settings.strikeType": "Strikeout text:",
 "pad.settings.strikeType.normal": "Normal",
 "pad.settings.strikeType.hidden": "Hidden",
 
