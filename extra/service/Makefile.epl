@@ -1,0 +1,43 @@
+# database
+DBNAME=
+DBUSER=etherpad
+
+########
+# set MySQL
+########
+# https://github.com/Pita/etherpad-lite/wiki/How-to-use-Etherpad-Lite-with-MySQL
+mysql:
+# create MySQL database/user
+# these also appear in settings.json:
+# $DBNAME .dbSettings.database
+# $DBUSER .dbSettings.user
+# $DBPASS .dbSettings.password
+	mysql -u root -p
+#	[create database `$DBNAME`;]
+#	[grant all privileges on `$DBNAME`.* to '$(DBUSER)'@'localhost' identified by '$(DBPASS)';]
+#	[exit]
+# run EtherPad
+	bin/run.sh
+# change database format
+	mysql -u root -p
+#	ALTER DATABASE `$(DBNAME)` CHARACTER SET utf8 COLLATE utf8_bin;
+#	USE `$(DBNAME)`;
+#	ALTER TABLE `store` CONVERT TO CHARACTER SET utf8 COLLATE utf8_bin;
+
+# https://github.com/ether/etherpad-lite/wiki/How-to-list-all-pads
+list:
+	mysql -u $(DBUSER) $(DBNAME) -e 'select store.key from store' -p \
+	| grep -Eo '^pad:[^:]+' \
+	| sed -e 's/pad://' \
+	| sort \
+	| uniq -c \
+	| sort -rn \
+	| awk '{if ($1!="2") {print $2 }}'
+
+# http://www.thegeekstuff.com/2008/09/backup-and-restore-mysql-database-using-mysqldump/
+backup-db:
+	for DB in $(DBNAME); do mysqldump -u root ${DB} -p > "${DB}_`date +%Y%m%d%H%M`.sql"; done
+
+# 
+backup-pads:
+	for pad in `$(MAKE) list`; do wget $(HOST)/p/${pad}/export/html -O ${pad}.html; done
