@@ -114,6 +114,7 @@ var getParameters = [
   { name: "showChat",         checkVal: "false", callback: function(val) { $('#chaticon').hide(); } },
   { name: "showLineNumbers",  checkVal: "false", callback: function(val) { settings.LineNumbersDisabled = true; } },
   { name: "useMonospaceFont", checkVal: "true",  callback: function(val) { settings.useMonospaceFontGlobal = true; } },
+{ name: "useHiddenFont", checkVal: "true",  callback: function(val) { settings.useHiddenFontGlobal = true; } },
   // If the username is set as a parameter we should set a global value that we can call once we have initiated the pad.
   { name: "userName",         checkVal: null,    callback: function(val) { settings.globalUserName = decodeURIComponent(val); } },
   // If the userColor is set as a parameter, set a global value to use once we have initiated the pad.
@@ -322,6 +323,10 @@ function handshake()
       {
         pad.changeViewOption('useMonospaceFont', true);
       }
+if (settings.useHiddenFontGlobal == true)
+{
+  pad.changeViewOption('useHiddenFont', true);
+}
       // if the globalUserName value is set we need to tell the server and the client about the new authorname
       if (settings.globalUserName !== false)
       {
@@ -1022,6 +1027,7 @@ var settings = {
   LineNumbersDisabled: false
 , noColors: false
 , useMonospaceFontGlobal: false
+, useHiddenFontGlobal: false
 , globalUserName: false
 , globalUserColor: false
 , rtlIsTrue: false

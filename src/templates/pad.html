@@ -1,4 +1,4 @@
-<%
+ <%
   var settings = require("ep_etherpad-lite/node/utils/Settings")
     , langs = require("ep_etherpad-lite/node/hooks/i18n").availableLangs
 %>
@@ -76,6 +76,11 @@
                       <span class="buttonicon buttonicon-strikethrough"></span>
                     </a>
                 </li>
+<li class="acl-write" id="hidable" data-key="hidable">
+  <a class="grouped-right" data-l10n-id="pad.toolbar.hidable.title">
+    <span class="buttonicon buttonicon-bold"></span>
+  </a>
+</li>
                 <li class="acl-write separator"></li>
                 <li class="acl-write" id="oderedlist" data-key="insertorderedlist">
                     <a class="grouped-left" data-l10n-id="pad.toolbar.ol.title">
@@ -243,6 +248,17 @@
                             </select>
                         </td>
                     </tr>
+<tr>
+<td>
+    <label for="viewstrikemenu" data-l10n-id="pad.settings.strikeType">Strikeout type:</label>
+</td>
+<td>
+    <select id="viewstrikemenu">
+        <option value="normal" data-l10n-id="pad.settings.strikeType.normal"></option>
+        <option value="hidden" data-l10n-id="pad.settings.strikeType.hidden"></option>
+    </select>
+</td>
+</tr>
                     <% e.end_block(); %>
                 </table>
             </div>

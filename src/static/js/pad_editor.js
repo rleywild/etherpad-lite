@@ -75,6 +75,11 @@ var padeditor = (function()
       {
         pad.changeViewOption('useMonospaceFont', $("#viewfontmenu").val() == 'monospace');
       });
+
+$("#viewstrikemenu").change(function()
+{
+  pad.changeViewOption('useHiddenFont', $("#viewstrikemenu").val() == 'hidden');
+});
       
       html10n.bind('localized', function() {
         $("#languagemenu").val(html10n.getLanguage());
@@ -106,6 +111,9 @@ var padeditor = (function()
       }
       self.ace.setProperty("rtlIsTrue", settings.rtlIsTrue);
 
+        // XXX all this getOption->setProperty/setCheckbox business should be:
+        // handled by a library for dependency-tracking
+        // the code should be in one place instead of strewn bw src/{templates/pad.html, locales/en.json, static/js/pad_editor.js, static/js/ace2_inner.js}
       var v;
 
       v = getOption('rtlIsTrue', false);
@@ -125,6 +133,10 @@ var padeditor = (function()
       v = getOption('useMonospaceFont', false);
       self.ace.setProperty("textface", (v ? "monospace" : "Arial, sans-serif"));
       $("#viewfontmenu").val(v ? "monospace" : "normal");
+
+v = getOption('useHiddenFont', false);
+self.ace.setProperty("striketype", v ? true : false); // this must cohere w ace2_inner.js
+$("#viewstrikemenu").val(v ? "hidden" : "normal"); // this must cohere w locales/en.json
     },
     dispose: function()
     {

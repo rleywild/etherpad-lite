@@ -5,6 +5,7 @@
   "pad.toolbar.italic.title": "Italic (Ctrl-I)",
   "pad.toolbar.underline.title": "Underline (Ctrl-U)",
   "pad.toolbar.strikethrough.title": "Strikethrough",
+"pad.toolbar.hidable.title": "Hidable",
   "pad.toolbar.ol.title": "Ordered list",
   "pad.toolbar.ul.title": "Unordered List",
   "pad.toolbar.indent.title": "Indent",
@@ -32,6 +33,11 @@
   "pad.settings.fontType": "Font type:",
   "pad.settings.fontType.normal": "Normal",
   "pad.settings.fontType.monospaced": "Monospace",
+
+"pad.settings.strikeType": "Hidden type:",
+"pad.settings.strikeType.normal": "Normal",
+"pad.settings.strikeType.hidden": "Hidden",
+
   "pad.settings.globalView": "Global View",
   "pad.settings.language": "Language:",
   "pad.importExport.import_export": "Import/Export",

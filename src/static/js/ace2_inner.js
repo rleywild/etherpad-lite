@@ -675,6 +675,10 @@ function Ace2Inner(){
     setClassPresence(root, "static", !isEditable);
   }
 
+function setHidden(newVal) {
+    dynamicCSS.selectorStyle(".authorColors s").visibility = (newVal == true ? "hidden" : "visible");
+}
+
   function enforceEditability()
   {
     setEditable(isEditable);
@@ -957,10 +961,14 @@ function Ace2Inner(){
       },
       styled: setStyled,
       textface: setTextFace,
+striketype: setHidden,
       textsize: setTextSize,
       rtlistrue: setClassPresenceNamed(root, "rtl")
     };
-    
+
+// strikeout
+
+
     var setter = setters[key.toLowerCase()];
     
     // check if setter is present 
