@@ -60,9 +60,12 @@ Portal submits content into new blog post
 
 ## Usage
 
+### API version
+The latest version is `1.2`
+
 ### Request Format
 
-The API is accessible via HTTP. HTTP Requests are in the format /api/$APIVERSION/$FUNCTIONNAME. Parameters are transmitted via HTTP GET. $APIVERSION depends on the endpoints you want to use. The latest version is `1.1`
+The API is accessible via HTTP. HTTP Requests are in the format /api/$APIVERSION/$FUNCTIONNAME. Parameters are transmitted via HTTP GET. $APIVERSION depends on the endpoints you want to use.
 
 ### Response Format
 Responses are valid JSON in the following format:
@@ -161,7 +164,7 @@ creates a new pad in this group
   * `{code: 1, message:"groupID does not exist", data: null}`
 
 #### listAllGroups()
- * API >= 1
+ * API >= 1.1
 
 lists all existing groups
 
@@ -289,6 +292,34 @@ returns the text of a pad formatted as HTML
   * `{code: 0, message:"ok", data: {html:"Welcome Text<br>More Text"}}`
   * `{code: 1, message:"padID does not exist", data: null}`
 
+### Chat
+#### getChatHistory(padID, [start, end])
+ * API >= 1.2.7
+
+returns
+
+* a part of the chat history, when `start` and `end` are given
+* the whole chat histroy, when no extra parameters are given
+
+
+*Example returns:*
+
+* `{"code":0,"message":"ok","data":{"messages":[{"text":"foo","userId":"a.foo","time":1359199533759,"userName":"test"},{"text":"bar","userId":"a.foo","time":1359199534622,"userName":"test"}]}}`
+* `{code: 1, message:"start is higher or equal to the current chatHead", data: null}`
+* `{code: 1, message:"padID does not exist", data: null}`
+
+#### getChatHead(padID)
+ * API >= 1.2.7
+
+returns the chatHead (last number of the last chat-message) of the pad
+
+
+*Example returns:*
+
+* `{code: 0, message:"ok", data: {chatHead: 42}}`
+* `{code: 1, message:"padID does not exist", data: null}`
+
+
 ### Pad
 Group pads are normal pads, but with the name schema GROUPID$PADNAME. A security manager controls access of them and its forbidden for normal pads to include a $ in the name. 
 
@@ -324,7 +355,7 @@ returns the number of user that are currently editing this pad
 returns the list of users that are currently editing this pad
 
 *Example returns:*
-  * `{code: 0, message:"ok", data: {padUsers: [{colorId:"#c1a9d9","name":"username1","timestamp":1345228793126},{"colorId":"#d9a9cd","name":"Hmmm","timestamp":1345228796042}]}}`
+  * `{code: 0, message:"ok", data: {padUsers: [{colorId:"#c1a9d9","name":"username1","timestamp":1345228793126,"id":"a.n4gEeMLsvg12452n"},{"colorId":"#d9a9cd","name":"Hmmm","timestamp":1345228796042,"id":"a.n4gEeMLsvg12452n"}]}}`
   * `{code: 0, message:"ok", data: {padUsers: []}}`
 
 #### deletePad(padID)
@@ -407,3 +438,22 @@ sends a custom message of type `msg` to the pad
 *Example returns:*
   * `{code: 0, message:"ok", data: {}}`
   * `{code: 1, message:"padID does not exist", data: null}`
+
+#### checkToken()
+ * API >= 1.2
+
+returns ok when the current api token is valid
+
+*Example returns:*
+  * `{"code":0,"message":"ok","data":null}`
+  * `{"code":4,"message":"no or wrong API Key","data":null}`
+
+### Pads
+
+#### listAllPads()
+ * API >= 1.2.1
+ 
+lists all pads on this epl instance
+
+*Example returns:*
+ * `{code: 0, message:"ok", data: ["testPad", "thePadsOfTheOthers"]}`

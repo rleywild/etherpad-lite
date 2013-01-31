@@ -44,6 +44,13 @@
                   },
   */
   
+  //Logging configuration. See log4js documentation for further information
+  // https://github.com/nomiddlename/log4js-node
+  "logconfig" :
+	{ "appenders": [
+	    { "type": "console" }
+	] },
+  
   //the default text of a pad
   "defaultPadText" : "Welcome to Etherpad Lite!\n\nThis pad text is synchronized as you type, so that everyone viewing this page sees the same text. This allows you to collaborate seamlessly on documents!\n\nGet involved with Etherpad at http:\/\/etherpad.org\n",
   
@@ -88,5 +95,8 @@
   */
 
   /* The log level we are using, can be: DEBUG, INFO, WARN, ERROR */
-  "loglevel": "INFO"
+  "loglevel": "INFO",
+
+  // restrict socket.io transport methods
+  "socketTransportProtocols" : ["xhr-polling", "jsonp-polling", "htmlfile"]
 }
